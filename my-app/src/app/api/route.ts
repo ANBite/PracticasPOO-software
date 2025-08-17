@@ -25,18 +25,22 @@ export async function POST(request : NextRequest) {
     const sql = postgres(conectionstring);
 
     try {
-        let dato = await sql`SELECT * from "POST"`;
+        await sql`INSERT INTO "POST" (title, description, author)
+        VALUES (${title}, ${description}, ${author})
+        `;
         return NextResponse.json(
-        { message: "Conexión exitosa a la base de datos sin insertar datos",
-            "Datos ya existentes en la base de datos" : dato,
+        { message: "Post creado exitosamente",
+            title,
+            description,
+            author,
          },
         { status: 200 }
         );
     
     } catch (error) {
-        console.error("Error al conectarse a la base de datos:", error);
+        console.error("No se pudo crear el POST", error);
         return NextResponse.json(
-            { error: "Error al conectarse a la base de datos" },
+            { error: "Error al crear el POST" },
             { status: 500 }
         );
     }

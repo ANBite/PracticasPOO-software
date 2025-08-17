@@ -1,4 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
+import postgres from "postgres";
 
 export async function POST(request : NextRequest) {
     const data = await request.json();
@@ -18,12 +19,25 @@ export async function POST(request : NextRequest) {
             { status: 400 }
         );
     } 
-    return NextResponse.json(
-        { message: "Datos recibidos correctamente",
-            title,
-            description,
-            author,
+
+    const conectionstring = 
+    "postgresql://postgres.xcuzninsjebjzwjzmjjr:kN5740jekguHZqp8@aws-1-us-east-2.pooler.supabase.com:6543/postgres";
+    const sql = postgres(conectionstring);
+
+    try {
+        let dato = await sql`SELECT * from "POST"`;
+        return NextResponse.json(
+        { message: "Conexión exitosa a la base de datos sin insertar datos",
+            "Datos ya existentes en la base de datos" : dato,
          },
         { status: 200 }
-    );
+        );
+    
+    } catch (error) {
+        console.error("Error al conectarse a la base de datos:", error);
+        return NextResponse.json(
+            { error: "Error al conectarse a la base de datos" },
+            { status: 500 }
+        );
+    }
 }

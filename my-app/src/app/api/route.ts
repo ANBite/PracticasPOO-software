@@ -1,6 +1,8 @@
 import { NextResponse, NextRequest } from "next/server";
 import Insert from "@/app/utils/insertar";
 import RegisterLibro from "../utils/libro-valid";
+import ShowLibro from "../utils/libro-show";
+import Show from "../utils/mostrar";
 
 export async function POST(request : NextRequest) {
     const data = await request.json();
@@ -25,4 +27,24 @@ export async function POST(request : NextRequest) {
             { status: 500 }
         );
     }
+}
+
+export async function GET() {
+  try {
+    const a = await new ShowLibro(new Show()).mostrar();
+
+    return NextResponse.json(
+      {
+        message: "GET exitoso",
+        "Datos existentes": a,
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("No se pudo obtener el POST", error);
+    return NextResponse.json(
+      { error: "Error al obtener el POST" },
+      { status: 500 }
+    );
+  }
 }

@@ -18,7 +18,7 @@ export async function POST(request : NextRequest) {
             { error: "Todos los campos deben ser cadenas de texto" },
             { status: 400 }
         );
-    } 
+    }
 
     try {
         const response = new Insert(title, description, author).INSERT(title, description, author);
